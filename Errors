@@ -1,0 +1,14 @@
+Error While compiling model as
+
+
+env (4, 10, 10)
+Traceback (most recent call last):
+  File "train.py", line 140, in <module>
+    main()
+  File "train.py", line 123, in main
+    model = create_dqn_model(env, num_last_frames=4)
+  File "train.py", line 107, in create_dqn_model
+    model.summary()
+  File "/anaconda3/lib/python3.6/site-packages/keras/engine/network.py", line 1247, in summary
+    'This model has never been called, thus its weights '
+ValueError: This model has never been called, thus its weights have not yet been created, so no summary can be displayed. Build the model first (e.g. by calling it on some test data).
