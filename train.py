@@ -59,7 +59,7 @@ def create_dqn_model(env, num_last_frames):
     
 
     model = Sequential()
-    print('env' , (num_last_frames, ) +  env.observation_shape)
+    print('env' , (10,) + (num_last_frames, ) +  env.observation_shape )
     #Printing the model params 
 
     #Output => env (4,) ObservationSHape (10, 10)
@@ -69,9 +69,9 @@ def create_dqn_model(env, num_last_frames):
         16,
         kernel_size=(3, 3),
         strides=(1, 1),
-        data_format='channels_first',
-        input_shape= (num_last_frames, ) +  env.observation_shape
-    )))
+        data_format='channels_first') ,
+        input_shape= (10 , ) + (num_last_frames, ) +  env.observation_shape
+    ))
     model.add(TimeDistributed(Activation('relu')))
     model.add(TimeDistributed(Conv2D(
         32,
@@ -80,39 +80,28 @@ def create_dqn_model(env, num_last_frames):
         data_format='channels_first'
     )))
     model.add(TimeDistributed(Activation('relu')))
-
+    #model.add(TimeDistributed(Conv2D(96, (11, 11),strides = (4,4), activation = 'relu')
+        #, input_shape=(10, 225, 225, 3)))
     # Dense layers.
     model.add(TimeDistributed(Flatten()))
     #Timedistributed changes and the below 1 liner code change by me.
     model.add(Dropout(0.25))
-    
-
     ##Adding Lstm layer to the model MY CHANGE on 24/12/2018.
-
-    #regressor.add(LSTM(units = 50, return_sequences = True, input_shape = (X_train.shape[1], 1)))
-    #regressor.add(Dropout(0.2))
-
     model.add(LSTM(units = 200 , return_sequences = True))
     model.add(Dropout(0.25))
     model.add(LSTM(units = 200 , return_sequences = True))
     model.add(Dropout(0.25))
     model.add(LSTM(units = 200))
-
     #My code change END#####
-        
     model.add(Dense(256))
     model.add(Activation('relu'))
     model.add(Dense(env.num_actions))
-
     model.summary()
     model.compile(RMSprop(), 'MSE')
-
     #Recent code change -> 21/9/18
     model.save("Keras-64x2-10epoch")
     #tfjs.converters.save_keras_model(model, "tfjsv3")
     ##############################
-
-
     return model
 
 
